@@ -1,0 +1,10 @@
+#!/usr/bin/python3
+# Run Stevie from a checkout of the krel-assistant repo.
+import os
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+from stevie.cli import main  # noqa: E402
+
+sys.exit(main())
