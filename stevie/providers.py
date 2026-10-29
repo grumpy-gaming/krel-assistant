@@ -33,8 +33,8 @@ class OpenAICompatible:
             raise ProviderError(f"{self.config.provider} answered {e.code}: {detail}") from None
         except (urllib.error.URLError, ConnectionError) as e:
             if self.config.provider == "ollama":
-                raise ProviderError("Cannot reach Ollama at " + self.config.base_url
-                                    + ". Is it installed and running? (systemctl status ollama)") from None
+                raise ProviderError("Cannot reach Ollama at " + self.config.base_url + ". On KrelboyneOS, install it from "
+                                    "KOS Software > AI > Stevie's AI; if it is installed, check: systemctl status ollama") from None
             raise ProviderError(f"Cannot reach {self.config.provider}: {getattr(e, 'reason', e)}") from None
         except (TimeoutError, socket.timeout):
             raise ProviderError(f"{self.config.provider} did not answer within {self.config.timeout} seconds") from None
