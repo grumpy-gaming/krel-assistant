@@ -197,6 +197,17 @@ def open_app(name):
     return f"Started {title}."
 
 
+def open_url(url):
+    url = url.strip()
+    if "://" not in url:
+        url = "https://" + url
+    if not url.startswith(("https://", "http://")):
+        return "Only web addresses (http or https) can be opened."
+    subprocess.Popen(["xdg-open", url], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                     stderr=subprocess.DEVNULL, start_new_session=True)
+    return f"Opened {url} in the default browser."
+
+
 def run_command(command):
     return run(command, timeout=300, shell=True)
 
@@ -231,6 +242,9 @@ TOOLS = [
     Tool("open_app", "Open an installed desktop app by name.",
          open_app, {"name": ("string", "App name, e.g. Firefox or Steam")}, ("name",),
          changes=True, summary=lambda a: f"open the app '{a.get('name')}'"),
+    Tool("open_url", "Open a web address in the user's default browser.",
+         open_url, {"url": ("string", "Web address, e.g. krelboyneos.org")}, ("url",),
+         changes=True, summary=lambda a: f"open {a.get('url')} in your browser"),
     Tool("run_command", "Run a shell command as the user and return its output. Use only when no other tool fits.",
          run_command, {"command": ("string", "The exact shell command")}, ("command",),
          changes=True, summary=lambda a: f"run this command:\n    {a.get('command')}"),

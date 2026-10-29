@@ -150,6 +150,14 @@ class ToolTests(FakeHome):
         self.assertIn("Memory:", text)
         self.assertIn("System disk", text)
 
+    def test_open_url_only_opens_web_addresses(self):
+        from stevie.tools import open_url
+        with mock.patch("stevie.tools.subprocess.Popen") as popen:
+            self.assertIn("https://krelboyneos.org", open_url("krelboyneos.org"))
+            self.assertEqual(popen.call_args[0][0], ["xdg-open", "https://krelboyneos.org"])
+            self.assertIn("Only web addresses", open_url("file:///etc/passwd"))
+            self.assertEqual(popen.call_count, 1)
+
     def test_disk_usage_quotes_the_path(self):
         folder = os.path.join(self.home.name, "odd name; echo nope")
         os.makedirs(folder)
