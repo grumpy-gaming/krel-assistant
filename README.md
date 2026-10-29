@@ -24,7 +24,7 @@ Settings live in `~/.config/krel-assistant/config.toml`; every line is optional:
 
 ```toml
 provider = "ollama"            # ollama, gemini, openrouter or openai
-model = "qwen3:4b"
+model = "qwen3:4b-instruct"
 # base_url = "http://192.168.1.50:11434/v1"   # e.g. Ollama on another computer on your network
 # api_key = "..."              # or set GEMINI_API_KEY / OPENROUTER_API_KEY / OPENAI_API_KEY instead
 # timeout = 120

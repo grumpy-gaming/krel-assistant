@@ -10,6 +10,7 @@ import os
 import shlex
 import shutil
 import subprocess
+import time
 from dataclasses import dataclass, field
 
 MAX_OUTPUT = 6000  # characters of tool output sent back to the AI
@@ -95,7 +96,11 @@ def system_overview():
         cap, status = read(f"{bat}/capacity"), read(f"{bat}/status")
         full, design = read(f"{bat}/energy_full") or read(f"{bat}/charge_full"), \
             read(f"{bat}/energy_full_design") or read(f"{bat}/charge_full_design")
-        health = f", holds {int(full) * 100 // int(design)}% of its original charge" if full and design and int(design) else ""
+        health = ""
+        if full and design and int(design):
+            pct = int(full) * 100 // int(design)
+            # Batteries count as worn below 80% of their design capacity
+            health = f", holds {pct}% of its original charge ({'worn, consider replacing' if pct < 80 else 'healthy'})"
         lines.append(f"Battery {os.path.basename(bat)}: {cap}% ({status}){health}")
 
     temps = []
@@ -108,6 +113,9 @@ def system_overview():
                 temps.append(f"{name} {label} {int(value) / 1000:.0f}°C")
     if temps:
         lines.append("Temperatures: " + "; ".join(temps[:12]))
+
+    clock = run(["timedatectl", "show", "-p", "NTP", "-p", "NTPSynchronized", "-p", "Timezone"]).replace("\n", ", ")
+    lines.append(f"Clock: {time.strftime('%Y-%m-%d %H:%M:%S %Z')}; {clock}")
 
     lines.append("Network:\n" + run(["ip", "-brief", "address"]))
     return "\n".join(lines)

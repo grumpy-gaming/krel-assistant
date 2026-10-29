@@ -18,8 +18,9 @@ PROVIDERS = {
 }
 
 DEFAULT_PROVIDER = "ollama"
-# Placeholder until the default local model is picked by testing on real hardware.
-DEFAULT_MODEL = "qwen3:4b"
+# Picked by testing on a CPU-only laptop (i7-1185G7): answers in 10-50 s and calls tools reliably.
+# qwen3:4b (thinking) took minutes; llama3.2:3b was faster but garbled tool calls.
+DEFAULT_MODEL = "qwen3:4b-instruct"
 DEFAULT_TIMEOUT = 120
 
 
